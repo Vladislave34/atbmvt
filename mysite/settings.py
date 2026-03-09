@@ -128,4 +128,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    str(BASE_DIR / 'static'),
+]
+
 AUTH_USER_MODEL = 'users.CustomUser'
+
+IMAGE_URL = "/images/"
+
+IMAGE_ROOT = BASE_DIR / 'images'
