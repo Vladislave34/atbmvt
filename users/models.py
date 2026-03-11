@@ -1,27 +1,41 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
+from django_resized import ResizedImageField
 
 
 # Create your models here.
-
-
+# Таблиці в БД
 class CustomUser(AbstractUser):
-    # Поле для зберігання маленького аватара користувача
-    # upload_to="avatars/" означає, що файл буде зберігатись у папці media/avatars
-    # null=True дозволяє зберігати NULL у базі даних
-    # blank=True дозволяє залишати поле порожнім у формах
-    image_small = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    image_small = ResizedImageField(
+        size=[300, 300],
+        crop=['middle', 'center'],
+        quality=85,
+        force_format='WEBP',
+        upload_to='avatars/small/',
+        null=True,
+        blank=True
+    )
+    image_medium = ResizedImageField(
+        size=[800, 800],
+        quality=85,
+        force_format='WEBP',
+        upload_to='avatars/medium/',
+        null=True,
+        blank=True
+    )
 
-    # Поле для зберігання аватара середнього розміру
-    # Використовується, наприклад, у профілі користувача
-    image_medium = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    image_big = ResizedImageField(
+        size=[1200, 1200],
+        quality=90,
+        force_format='WEBP',
+        upload_to='avatars/large/',
+        null=True,
+        blank=True
+    )
 
-    # Поле для зберігання великого аватара
-    # Може використовуватись для сторінки профілю або детального перегляду
-    image_big = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    # image_small = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    # image_medium = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    # image_large = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
-        # Метод, який визначає як об'єкт користувача буде відображатися у Django Admin
-        # Тут буде показуватись email користувача
         return self.email
