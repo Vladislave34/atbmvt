@@ -1,6 +1,6 @@
 from django import forms
 from .models import CustomUser
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -71,3 +71,44 @@ class CustomUserCreationForm(UserCreationForm):
     #     if commit:
     #         user.save()
     #     return user
+class CustomUserLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label="Логін",
+        widget=forms.TextInput(attrs={'class': "form-control"})
+    )
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+class EmailForm(forms.Form):
+
+    email = forms.EmailField(
+        label="Email",
+        max_length=255,
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter your email"
+            }
+        )
+    )
+class SetNewPasswordForm(forms.Form):
+
+    password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    password2 = forms.CharField(
+        label="Confirm password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("password1") != cleaned_data.get("password2"):
+            raise forms.ValidationError("Passwords do not match")
+
+        return cleaned_data
