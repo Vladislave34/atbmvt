@@ -1,6 +1,13 @@
+import uuid
 
 
 
+# import uuid
+
+# def upload_avatar(size):
+#     def wrapper(instance, filename):
+#         return f"avatars/{size}/{uuid.uuid4()}.webp"
+#     return wrapper
 
 from PIL import Image
 import io, os
@@ -32,10 +39,10 @@ def compress_image(image_field, size=(800,800), quality=85):
     # повертаємо оптимізоване зображення та ім'я файлу
     return optimized_image, image_name
 
-def save_user_avatar(image, size, folder):
+def save_image(image, size, folder):
     optimized_image, image_name = compress_image(image, size)
-    path = os.path.join(folder,image_name)
-    full_path = os.path.join(settings.IMAGES_ROOT, path)
+    path = os.path.join(folder, image_name)
+    full_path = os.path.join(settings.IMAGE_ROOT, path)
     os.makedirs(os.path.dirname(full_path), exist_ok=True)
     with open(full_path, "wb") as f:
         f.write(optimized_image.read())
