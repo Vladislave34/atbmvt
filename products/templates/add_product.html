@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 onerror: (response) => console.log("Error:", response)
             },
             revert: (uniqueFileId, load, error) => {
-                fetch("/products/delete_temp_image", {
+                fetch("/products/delete_temp_image/", {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

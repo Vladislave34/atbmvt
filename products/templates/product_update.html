@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h1 class="text-center">Редагувати продукт: {{ product.name }}</h1>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="POST" enctype="multipart/form-data" id="product-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form.category.label_tag }}
+                        {{ form.category|add_class:"form-select" }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.name.label_tag }}
+                        {{ form.name|add_class:"form-control" }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label_tag }}
+                        {{ form.description|add_class:"form-control" }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.price.label_tag }}
+                        {{ form.price|add_class:"form-control" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Фото товару</h5>
+
+                    <!-- Відображаємо старі фото з чекбоксом для видалення -->
+                    {% for img in existing_images %}
+                        <div class="mb-2">
+                            <img src="{{ img.image.url }}" height="100" class="me-2">
+                            <label>
+                                Видалити
+                                <input type="checkbox" name="delete_images" value="{{ img.id }}">
+                            </label>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Нові фото через FilePond -->
+                    {{ form.new_images }}
+                </div>
+            </div>
+
+            <div class="d-flex flex-row">
+                <button type="submit" class="btn btn-success mt-3">Зберегти зміни</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Ініціалізація FilePond для нових фото
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    const inputElement = document.querySelector('input[name="new_images"]');
+    FilePond.create(inputElement, {
+        allowMultiple: true,
+        allowReorder: true,
+        allowImagePreview: true,
+        imagePreviewHeight: 150,
+    });
+});
+</script>
+{% endblock %}

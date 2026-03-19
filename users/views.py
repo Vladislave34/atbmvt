@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from .util import save_user_avatar
+from .util import save_custom_image
 from django.utils.http import urlsafe_base64_decode
 
 # Create your views here.
@@ -21,12 +21,12 @@ def register(request):
             try:
                 user = form.save(commit=False)
                 if 'email' in form.cleaned_data:
-                    user.username = form.cleaned_data['username']
+                    user.username = form.cleaned_data['email']
                 if 'image' in request.FILES:
                     image = request.FILES.get("image")
-                    user.image_small = save_user_avatar(image, size=(300,300), folder="small")
-                    user.image_medium = save_user_avatar(image, size=(800,800), folder="medium")
-                    user.image_large = save_user_avatar(image, size=(1200,1200), folder="large")
+                    user.image_small = save_custom_image(image, size=(300,300), folder="small")
+                    user.image_medium = save_custom_image(image, size=(800,800), folder="medium")
+                    user.image_large = save_custom_image(image, size=(1200,1200), folder="large")
                 user.save()
                 login(request, user)
                 return redirect('homepage')
